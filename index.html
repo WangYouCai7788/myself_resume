@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>王雨阳 · 前端工程师</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'JetBrains Mono', 'Fira Code', 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+  background: #0a0a0f;
+  color: #c8d6e5;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ===== MATRIX RAIN ===== */
+#matrix-rain { position: fixed; inset: 0; z-index: 0; opacity: 0.12; pointer-events: none; }
+.scanlines { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.015) 2px, rgba(0,255,65,0.015) 4px); }
+.cursor-glow { position: fixed; width: 300px; height: 300px; border-radius: 50%; pointer-events: none; z-index: 0; background: radial-gradient(circle, rgba(0,255,65,0.06) 0%, transparent 70%); transform: translate(-50%, -50%); transition: left 0.1s ease, top 0.1s ease; }
+.grid-overlay { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+.lang-toggle { position: fixed; top: 16px; right: 20px; z-index: 200; display: flex; gap: 4px; }
+.lang-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(0,255,65,0.2); background: rgba(10,10,15,0.8); backdrop-filter: blur(10px); color: #556; font-size: 12px; font-family: inherit; cursor: pointer; transition: all 0.3s; letter-spacing: 1px; }
+.lang-btn.active { border-color: #00ff41; color: #00ff41; box-shadow: 0 0 10px rgba(0,255,65,0.2); }
+.lang-btn:hover { border-color: rgba(0,255,65,0.4); color: #889; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,15,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,255,65,0.1); }
+.nav-logo { font-weight: 700; font-size: clamp(14px, 2vw, 18px); color: #00ff41; text-shadow: 0 0 10px rgba(0,255,65,0.5); }
+.nav-logo::before { content: '> '; color: #4a9eff; }
+.nav-links { display: flex; gap: clamp(12px, 3vw, 32px); list-style: none; }
+.nav-links a { color: #666; text-decoration: none; font-size: clamp(11px, 1.2vw, 13px); letter-spacing: 1px; position: relative; transition: color 0.3s; }
+.nav-links a:hover { color: #00ff41; }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: #00ff41; transition: width 0.3s; box-shadow: 0 0 6px #00ff41; }
+.nav-links a:hover::after { width: 100%; }
+.nav-hamburger { display: none; cursor: pointer; color: #00ff41; font-size: 24px; background: none; border: none; }
+
+.hero { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 20px 60px; }
+.glitch-wrapper { position: relative; margin-bottom: 16px; }
+.glitch { font-size: clamp(36px, 10vw, 96px); font-weight: 900; color: #00ff41; text-shadow: 0 0 10px rgba(0,255,65,0.8), 0 0 30px rgba(0,255,65,0.4); position: relative; letter-spacing: clamp(4px, 1.5vw, 8px); animation: glitchPulse 4s ease-in-out infinite; }
+@keyframes glitchPulse { 0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:0.3;transform:skew(2deg)} 94%{opacity:1;transform:skew(-1deg)} 95%{opacity:0.8} 96%{opacity:1;transform:skew(0)} }
+.glitch::before,.glitch::after { content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100% }
+.glitch::before{color:#ff0055;z-index:-1;animation:glitch-shift 3s infinite linear alternate-reverse;opacity:.5}
+.glitch::after{color:#4a9eff;z-index:-1;animation:glitch-shift 2s infinite linear alternate;opacity:.5}
+@keyframes glitch-shift{0%{transform:translate(0)}20%{transform:translate(-3px,2px)}40%{transform:translate(3px,-1px)}60%{transform:translate(-2px,-2px)}80%{transform:translate(2px,1px)}100%{transform:translate(0)}}
+.hero-subtitle { font-size:clamp(12px,2.5vw,20px);color:#4a9eff;letter-spacing:clamp(6px,1.5vw,12px);margin-bottom:8px;text-transform:uppercase;text-shadow:0 0 10px rgba(74,158,255,0.4) }
+.hero-desc{font-size:clamp(12px,1.5vw,14px);color:#556;max-width:500px;margin-bottom:24px;line-height:1.8;padding:0 20px}
+.hero-status{display:flex;gap:clamp(20px,6vw,40px);margin-bottom:32px;flex-wrap:wrap;justify-content:center}
+.status-item{text-align:center}
+.status-num{font-size:clamp(24px,5vw,32px);font-weight:700;color:#00ff41;text-shadow:0 0 10px rgba(0,255,65,0.5)}
+.status-label{font-size:clamp(10px,1.5vw,11px);color:#445;letter-spacing:2px;margin-top:4px}
+.glow-line{width:min(200px,50vw);height:2px;background:linear-gradient(90deg,transparent,#00ff41,transparent);margin-bottom:16px;box-shadow:0 0 10px rgba(0,255,65,0.5)}
+.scroll-indicator{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:#334;font-size:10px;letter-spacing:3px;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+.scroll-indicator .arrow{width:20px;height:20px;border-right:1px solid #00ff41;border-bottom:1px solid #00ff41;transform:rotate(45deg);opacity:.5}
+
+section{position:relative;z-index:2;padding:clamp(50px,8vw,100px) clamp(16px,5vw,40px);max-width:1100px;margin:0 auto}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:clamp(24px,5vw,48px);flex-wrap:wrap}
+.section-tag{font-size:11px;color:#00ff41;background:rgba(0,255,65,0.08);padding:4px 12px;border-radius:4px;border:1px solid rgba(0,255,65,0.2);white-space:nowrap}
+.section-title{font-size:clamp(20px,4vw,28px);font-weight:700;color:#eef;letter-spacing:4px}
+.section-line{flex:1;min-width:40px;height:1px;background:linear-gradient(90deg,rgba(0,255,65,0.3),transparent)}
+
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,40px)}
+.terminal{background:rgba(0,255,65,0.03);border:1px solid rgba(0,255,65,0.12);border-radius:8px;padding:20px;position:relative;overflow-x:auto}
+.terminal::before{content:'// about.me';position:absolute;top:-10px;left:16px;background:#0a0a0f;padding:0 8px;font-size:11px;color:#4a9eff}
+.terminal-line{display:flex;gap:8px;margin-bottom:8px;font-size:clamp(12px,1.5vw,13px);opacity:0;animation:typeIn .3s ease forwards}
+.terminal-line:nth-child(1){animation-delay:.2s}.terminal-line:nth-child(2){animation-delay:.4s}.terminal-line:nth-child(3){animation-delay:.6s}.terminal-line:nth-child(4){animation-delay:.8s}.terminal-line:nth-child(5){animation-delay:1s}.terminal-line:nth-child(6){animation-delay:1.2s}
+@keyframes typeIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.terminal-prompt{color:#00ff41;flex-shrink:0}.terminal-key{color:#4a9eff;flex-shrink:0}.terminal-val{color:#c8d6e5;word-break:break-word}.terminal-comment{color:#446;font-style:italic;flex-shrink:0}
+.highlight-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.highlight-card{background:rgba(0,255,65,0.03);border:1px solid rgba(0,255,65,0.08);border-radius:8px;padding:14px;transition:all .3s;cursor:default}
+.highlight-card:hover{border-color:rgba(0,255,65,0.3);background:rgba(0,255,65,0.06);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,255,65,0.1)}
+.highlight-icon{font-size:18px;margin-bottom:6px}.highlight-title{color:#00ff41;font-size:13px;font-weight:600;margin-bottom:4px}.highlight-text{color:#667;font-size:12px;line-height:1.6}
+
+.timeline{position:relative}
+.timeline::before{content:'';position:absolute;left:20px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,rgba(0,255,65,0.3),transparent)}
+.timeline-item{position:relative;padding-left:52px;margin-bottom:32px}
+.timeline-dot{position:absolute;left:12px;top:4px;width:16px;height:16px;border:2px solid #00ff41;border-radius:50%;background:#0a0a0f;z-index:1;transition:all .3s}
+.timeline-item:hover .timeline-dot{background:#00ff41;box-shadow:0 0 20px rgba(0,255,65,0.6)}
+.timeline-date{font-size:11px;color:#4a9eff;letter-spacing:2px;margin-bottom:4px}
+.timeline-company{font-size:clamp(14px,2vw,16px);font-weight:600;color:#eef;margin-bottom:4px}
+.timeline-role{font-size:12px;color:#00ff41;margin-bottom:8px}
+.timeline-desc{font-size:clamp(12px,1.5vw,13px);color:#667;line-height:1.8}
+.timeline-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.timeline-tag{font-size:10px;padding:2px 10px;border-radius:12px;background:rgba(0,255,65,0.08);border:1px solid rgba(0,255,65,0.15);color:#00ff41}
+
+.project-card{background:rgba(0,255,65,0.02);border:1px solid rgba(0,255,65,0.08);border-radius:12px;padding:clamp(16px,3vw,24px);margin-bottom:14px;transition:all .4s;position:relative;overflow:hidden}
+.project-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:#00ff41;transition:height .4s;box-shadow:0 0 10px rgba(0,255,65,0.5)}
+.project-card:hover::before{height:100%}
+.project-card:hover{border-color:rgba(0,255,65,0.2);transform:translateX(4px);background:rgba(0,255,65,0.04)}
+.project-title{font-size:clamp(14px,2vw,16px);font-weight:600;color:#eef;margin-bottom:4px}
+.project-tech{font-size:11px;color:#4a9eff;margin-bottom:8px}
+.project-desc{font-size:clamp(12px,1.5vw,13px);color:#667;line-height:1.8}
+
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,3vw,24px)}
+.skill-group h3{font-size:13px;color:#00ff41;margin-bottom:12px;letter-spacing:2px}
+.skill-item{margin-bottom:10px}
+.skill-header{display:flex;justify-content:space-between;font-size:12px;color:#889;margin-bottom:4px}
+.skill-bar{height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+.skill-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#00ff41,#4a9eff);width:0;transition:width 1.5s ease;box-shadow:0 0 8px rgba(0,255,65,0.3)}
+
+.contact-grid{display:flex;gap:clamp(12px,3vw,24px);justify-content:center;flex-wrap:wrap}
+.contact-item{padding:10px 18px;border:1px solid rgba(0,255,65,0.15);border-radius:8px;color:#889;font-size:clamp(12px,1.5vw,13px);transition:all .3s;text-decoration:none;display:flex;align-items:center;gap:8px}
+.contact-item:hover{border-color:#00ff41;color:#00ff41;box-shadow:0 0 20px rgba(0,255,65,0.15);transform:translateY(-2px)}
+
+footer{text-align:center;padding:40px 20px;color:#334;font-size:11px;letter-spacing:2px;position:relative;z-index:2}
+footer .glitch-small{color:#00ff41;text-shadow:0 0 6px rgba(0,255,65,0.3)}
+
+.reveal{opacity:0;transform:translateY(30px);transition:all .6s ease}
+.reveal.active{opacity:1;transform:translateY(0)}
+
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#0a0a0f}::-webkit-scrollbar-thumb{background:#00ff41;border-radius:3px}::-webkit-scrollbar-thumb:hover{background:#4a9eff}
+::selection{background:rgba(0,255,65,0.3);color:#fff}
+
+@media(max-width:768px){
+  nav{padding:12px 16px}
+  .nav-links{display:none;flex-direction:column;position:absolute;top:100%;right:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);padding:16px;border:1px solid rgba(0,255,65,0.1);border-radius:0 0 8px 8px;gap:12px;min-width:160px}
+  .nav-links.open{display:flex}
+  .nav-hamburger{display:block}
+  .lang-toggle{top:12px;right:60px}
+  .lang-btn{padding:4px 10px;font-size:11px}
+  .about-grid{grid-template-columns:1fr}
+  .highlight-grid{grid-template-columns:1fr 1fr}
+  .skills-grid{grid-template-columns:1fr}
+  .cursor-glow{display:none}
+}
+@media(max-width:480px){
+  .highlight-grid{grid-template-columns:1fr}
+  .timeline::before{left:14px}
+  .timeline-item{padding-left:40px}
+  .timeline-dot{left:6px;width:14px;height:14px}
+  .contact-item{width:100%;justify-content:center}
+}
+@media(min-width:769px){
+  .nav-hamburger{display:none!important}
+  .nav-links{display:flex!important}
+}
+</style>
+</head>
+<body>
+
+<canvas id="matrix-rain"></canvas>
+<div class="scanlines"></div>
+<div class="grid-overlay"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<canvas id="particles" class="particles"></canvas>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" data-lang="zh" onclick="switchLang('zh')">中</button>
+  <button class="lang-btn" data-lang="en" onclick="switchLang('en')">EN</button>
+</div>
+
+<nav>
+  <div class="nav-logo" data-i18n="nav.logo">王雨阳.portfolio</div>
+  <button class="nav-hamburger" onclick="toggleNav()">☰</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about" data-i18n="nav.about" onclick="closeNav()">/about</a></li>
+    <li><a href="#experience" data-i18n="nav.exp" onclick="closeNav()">/experience</a></li>
+    <li><a href="#projects" data-i18n="nav.projects" onclick="closeNav()">/projects</a></li>
+    <li><a href="#skills" data-i18n="nav.skills" onclick="closeNav()">/skills</a></li>
+    <li><a href="#contact" data-i18n="nav.contact" onclick="closeNav()">/contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="glitch-wrapper"><h1 class="glitch" data-text="王雨阳" data-i18n="hero.name">王雨阳</h1></div>
+  <div class="hero-subtitle" data-i18n="hero.title">Frontend Engineer</div>
+  <div class="glow-line"></div>
+  <p class="hero-desc" data-i18n="hero.desc">5年深耕Vue生态 · 把复杂业务变成优雅界面</p>
+  <div class="hero-status">
+    <div class="status-item"><div class="status-num" data-target="5">0</div><div class="status-label" data-i18n="hero.years">年经验</div></div>
+    <div class="status-item"><div class="status-num" data-target="30">0</div><div class="status-label" data-i18n="hero.projects">项目</div></div>
+    <div class="status-item"><div class="status-num" data-target="100">0</div><div class="status-label" data-i18n="hero.commit">投入度</div></div>
+  </div>
+  <div class="scroll-indicator"><span data-i18n="hero.scroll">滚动</span><div class="arrow"></div></div>
+</section>
+
+<section id="about">
+  <div class="section-header reveal"><span class="section-tag">// 01</span><h2 class="section-title" data-i18n="about.title">关于我</h2><div class="section-line"></div></div>
+  <div class="about-grid">
+    <div class="terminal reveal">
+      <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-key">whoami</span></div>
+      <div class="terminal-line"><span class="terminal-prompt">></span><span class="terminal-val" data-i18n="about.whoami">王雨阳 · 29岁 · 前端工程师</span></div>
+      <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-key">cat</span> <span class="terminal-comment">/tech/core</span></div>
+      <div class="terminal-line"><span class="terminal-prompt">></span><span class="terminal-val" data-i18n="about.tech">Vue2/Vue3 · TypeScript · ECharts · Canvas · WebSocket</span></div>
+      <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-key">cat</span> <span class="terminal-comment">/experience/highlight</span></div>
+      <div class="terminal-line"><span class="terminal-prompt">></span><span class="terminal-val" data-i18n="about.highlight">执法效率+30% · 加载提速25% · 前端Lead</span></div>
+    </div>
+    <div class="highlight-grid">
+      <div class="highlight-card reveal"><div class="highlight-icon">🧩</div><div class="highlight-title" data-i18n="about.c1t">全栈思维</div><div class="highlight-text" data-i18n="about.c1d">从技术选型到性能优化一条龙</div></div>
+      <div class="highlight-card reveal"><div class="highlight-icon">🎯</div><div class="highlight-title" data-i18n="about.c2t">业务导向</div><div class="highlight-text" data-i18n="about.c2d">把业务流程数字化才是真正的价值</div></div>
+      <div class="highlight-card reveal"><div class="highlight-icon">👥</div><div class="highlight-title" data-i18n="about.c3t">团队管理</div><div class="highlight-text" data-i18n="about.c3d">前端小组负责人，统筹协作与规范</div></div>
+      <div class="highlight-card reveal"><div class="highlight-icon">📱</div><div class="highlight-title" data-i18n="about.c4t">跨端开发</div><div class="highlight-text" data-i18n="about.c4d">PC · 移动 · 大屏 · uni-app 全都要</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="section-header reveal"><span class="section-tag">// 02</span><h2 class="section-title" data-i18n="exp.title">工作经历</h2><div class="section-line"></div></div>
+  <div class="timeline">
+    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-date" data-i18n="exp.e1d">2025.12 — 至今</div><div class="timeline-company" data-i18n="exp.e1c">中联诚信</div><div class="timeline-role" data-i18n="exp.e1r">前端开发工程师</div><div class="timeline-desc" data-i18n="exp.e1desc">基于Vue完成核心产品前端开发，主导多端适配与性能优化，参与技术方案评审。</div></div>
+    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-date" data-i18n="exp.e2d">2024.09 — 2025.09</div><div class="timeline-company" data-i18n="exp.e2c">新疆大启智慧信息科技</div><div class="timeline-role" data-i18n="exp.e2r">前端开发工程师</div><div class="timeline-desc"><span data-i18n="exp.e2desc">主导执法报警平台架构，电子签名、数据大屏、地图追踪。梳理全流程，提效30%。独立完成景区官网，加载提速25%。</span></div><div class="timeline-tags"><span class="timeline-tag">Vue2</span><span class="timeline-tag">Canvas</span><span class="timeline-tag">ECharts</span><span class="timeline-tag" data-i18n="exp.amap">高德地图</span></div></div>
+    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-date" data-i18n="exp.e3d">2023.03 — 2024.07</div><div class="timeline-company" data-i18n="exp.e3c">成都星睿尚合文化传媒</div><div class="timeline-role" data-i18n="exp.e3r">前端小组负责人</div><div class="timeline-desc" data-i18n="exp.e3desc">统筹前端小组，主导网站改版重构，制定前端代码规范，提升团队效率。</div></div>
+    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-date" data-i18n="exp.e4d">2022.01 — 2023.02</div><div class="timeline-company" data-i18n="exp.e4c">北京欢澄互娱 · 沈阳分公司</div><div class="timeline-role" data-i18n="exp.e4r">前端开发工程师</div><div class="timeline-desc" data-i18n="exp.e4desc">完成WEB核心模块开发，解决跨设备兼容性，参与代码规范制定。</div></div>
+    <div class="timeline-item reveal"><div class="timeline-dot"></div><div class="timeline-date" data-i18n="exp.e5d">2019.09 — 2021.11</div><div class="timeline-company" data-i18n="exp.e5c">沈阳创造价值科技</div><div class="timeline-role" data-i18n="exp.e5r">前端开发工程师</div><div class="timeline-desc" data-i18n="exp.e5desc">参与需求评审与技术选型，前后端数据交互，BUG修复与性能优化。</div></div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-header reveal"><span class="section-tag">// 03</span><h2 class="section-title" data-i18n="proj.title">精选项目</h2><div class="section-line"></div></div>
+  <div class="project-card reveal"><div class="project-title">⚡ <span data-i18n="proj.p1t">执法报警管理平台</span></div><div class="project-tech">Vue2 · Canvas · ECharts · 高德地图 · WebSocket</div><div class="project-desc"><span data-i18n="proj.p1d">独立搭建核心架构，电子签名+可视化大屏+地图追踪。WebSocket实时推送，执法提效30%。</span></div></div>
+  <div class="project-card reveal"><div class="project-title">📊 <span data-i18n="proj.p2t">MCN 数据平台</span></div><div class="project-tech">Vue · WebSocket · Element UI</div><div class="project-desc"><span data-i18n="proj.p2d">扫码即时登录、实时推送保活。路由管理、状态管理最佳实践。</span></div></div>
+  <div class="project-card reveal"><div class="project-title">🏔️ <span data-i18n="proj.p3t">圣泉旅游度假区官网</span></div><div class="project-tech">Vue2 · 响应式 · 性能优化</div><div class="project-desc"><span data-i18n="proj.p3d">独立完成官网从0到1，景区介绍、票务预订，加载提速25%。</span></div></div>
+  <div class="project-card reveal"><div class="project-title">🎮 <span data-i18n="proj.p4t">gamfunAPP CMS + 活动模块</span></div><div class="project-tech">vue-element-admin · WebSocket · 原生对接</div><div class="project-desc"><span data-i18n="proj.p4d">CRUD+富文本+扫码登录对接原生端，弹幕轮播多语言互动。</span></div></div>
+</section>
+
+<section id="skills">
+  <div class="section-header reveal"><span class="section-tag">// 04</span><h2 class="section-title" data-i18n="skill.title">技术栈</h2><div class="section-line"></div></div>
+  <div class="skills-grid">
+    <div class="skill-group reveal"><h3>▸ <span data-i18n="skill.g1">核心语言</span></h3><div class="skill-item"><div class="skill-header"><span>HTML / CSS / JavaScript</span><span>95%</span></div><div class="skill-bar"><div class="skill-fill" data-width="95"></div></div></div><div class="skill-item"><div class="skill-header"><span>TypeScript</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div></div></div>
+    <div class="skill-group reveal"><h3>▸ <span data-i18n="skill.g2">框架生态</span></h3><div class="skill-item"><div class="skill-header"><span>Vue2 / Vue3 (Composition API)</span><span>95%</span></div><div class="skill-bar"><div class="skill-fill" data-width="95"></div></div></div><div class="skill-item"><div class="skill-header"><span>Vue-Router / Pinia</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div></div>
+    <div class="skill-group reveal"><h3>▸ <span data-i18n="skill.g3">可视化 & 地图</span></h3><div class="skill-item"><div class="skill-header"><span>ECharts</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div><div class="skill-item"><div class="skill-header"><span>Canvas</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div></div><div class="skill-item"><div class="skill-header"><span data-i18n="skill.map">地图 API</span><span>80%</span></div><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div></div></div>
+    <div class="skill-group reveal"><h3>▸ <span data-i18n="skill.g4">工程化 & 跨端</span></h3><div class="skill-item"><div class="skill-header"><span>Vite / Webpack / Git</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div><div class="skill-item"><div class="skill-header"><span>Axios / WebSocket</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div><div class="skill-item"><div class="skill-header"><span>uni-app / 多端适配</span><span>80%</span></div><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div></div></div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-header reveal"><span class="section-tag">// 05</span><h2 class="section-title" data-i18n="contact.title">联系方式</h2><div class="section-line"></div></div>
+  <div class="contact-grid reveal">
+    <a href="tel:13644133963" class="contact-item">📞 13644133963</a>
+    <a href="mailto:oldobj@163.com" class="contact-item">✉️ oldobj@163.com</a>
+    <span class="contact-item">📍 <span data-i18n="contact.location">辽宁沈阳 · 大东区</span></span>
+  </div>
+</section>
+
+<footer>
+  <span class="glitch-small">[ 王雨阳 ]</span> · <span data-i18n="footer.role">前端工程师</span><br>
+  <span style="font-size:10px;color:#223;">$ echo "<span data-i18n="footer.tag">一起创造点好东西</span>"</span>
+</footer>
+
+<script>
+const i18n={zh:{'nav.logo':'王雨阳.portfolio','nav.about':'/about','nav.exp':'/experience','nav.projects':'/projects','nav.skills':'/skills','nav.contact':'/contact','hero.title':'Frontend Engineer','hero.desc':'5年深耕Vue生态 · 把复杂业务变成优雅界面','hero.years':'年经验','hero.projects':'项目','hero.commit':'投入度','hero.name':'王雨阳','hero.scroll':'滚动','about.title':'关于我','about.whoami':'王雨阳 · 29岁 · 前端工程师','about.tech':'Vue2/Vue3 · TypeScript · ECharts · Canvas · WebSocket','about.highlight':'执法效率+30% · 加载提速25% · 前端Lead','about.c1t':'全栈思维','about.c1d':'从技术选型到性能优化一条龙','about.c2t':'业务导向','about.c2d':'把业务流程数字化才是真正的价值','about.c3t':'团队管理','about.c3d':'前端小组负责人，统筹协作与规范','about.c4t':'跨端开发','about.c4d':'PC · 移动 · 大屏 · uni-app 全都要','exp.title':'工作经历','exp.e1d':'2025.12 — 至今','exp.e1c':'中联诚信','exp.e1r':'前端开发工程师','exp.e1desc':'基于Vue完成核心产品前端开发，主导多端适配与性能优化，参与技术方案评审。','exp.e2d':'2024.09 — 2025.09','exp.e2c':'新疆大启智慧信息科技','exp.e2r':'前端开发工程师','exp.e2desc':'主导执法报警平台架构，电子签名、数据大屏、地图追踪。梳理全流程，提效30%。独立完成景区官网，加载提速25%。','exp.e3d':'2023.03 — 2024.07','exp.e3c':'成都星睿尚合文化传媒','exp.e3r':'前端小组负责人','exp.e3desc':'统筹前端小组，主导网站改版重构，制定前端代码规范，提升团队效率。','exp.e4d':'2022.01 — 2023.02','exp.e4c':'北京欢澄互娱 · 沈阳分公司','exp.e4r':'前端开发工程师','exp.e4desc':'完成WEB核心模块开发，解决跨设备兼容性，参与代码规范制定。','exp.e5d':'2019.09 — 2021.11','exp.e5c':'沈阳创造价值科技','exp.e5r':'前端开发工程师','exp.e5desc':'参与需求评审与技术选型，前后端数据交互，BUG修复与性能优化。','exp.amap':'高德地图','proj.title':'精选项目','proj.p1t':'执法报警管理平台','proj.p1d':'独立搭建核心架构，电子签名+可视化大屏+地图追踪。WebSocket实时推送，执法提效30%。','proj.p2t':'MCN 数据平台','proj.p2d':'扫码即时登录、实时推送保活。路由管理、状态管理最佳实践。','proj.p3t':'圣泉旅游度假区官网','proj.p3d':'独立完成官网从0到1，景区介绍、票务预订，加载提速25%。','proj.p4t':'gamfunAPP CMS + 活动模块','proj.p4d':'CRUD+富文本+扫码登录对接原生端，弹幕轮播多语言互动。','skill.title':'技术栈','skill.g1':'核心语言','skill.g2':'框架生态','skill.g3':'可视化 & 地图','skill.g4':'工程化 & 跨端','skill.map':'地图 API','contact.title':'联系方式','contact.location':'辽宁沈阳 · 大东区','footer.role':'前端工程师','footer.tag':'一起创造点好东西'},
+en:{'nav.logo':'Yuyang.Wang','nav.about':'/about','nav.exp':'/experience','nav.projects':'/projects','nav.skills':'/skills','nav.contact':'/contact','hero.title':'Frontend Engineer','hero.desc':'5 years in Vue ecosystem · Turning complexity into elegance','hero.years':'YEARS','hero.projects':'PROJECTS','hero.commit':'COMMITMENT','hero.name':'Yuyang Wang','hero.scroll':'SCROLL','about.title':'About Me','about.whoami':'Wang Yuyang · 29 · Frontend Engineer','about.tech':'Vue2/Vue3 · TypeScript · ECharts · Canvas · WebSocket','about.highlight':'Efficiency+30% · Load Speed+25% · Team Lead','about.c1t':'Full Stack Mindset','about.c1d':'From tech selection to perf optimization, end to end','about.c2t':'Business Driven','about.c2d':'Turning business processes into real digital value','about.c3t':'Team Leadership','about.c3d':'Frontend team lead, code standards & collaboration','about.c4t':'Cross Platform','about.c4d':'PC · Mobile · Dashboard · uni-app, all covered','exp.title':'Experience','exp.e1d':'2025.12 — Present','exp.e1c':'Zhonglian Chengxin','exp.e1r':'Frontend Engineer','exp.e1desc':'Built core product frontend with Vue, led multi-platform adaptation and performance optimization.','exp.e2d':'2024.09 — 2025.09','exp.e2c':'Xinjiang Daqi Tech','exp.e2r':'Frontend Engineer','exp.e2desc':'Architected law enforcement platform: e-signature, data dashboards, map tracking. Full workflow digitalization with 30% efficiency gain. Built tourism website with 25% faster loading.','exp.e3d':'2023.03 — 2024.07','exp.e3c':'Chengdu Xingrui Media','exp.e3r':'Frontend Team Lead','exp.e3desc':'Led frontend team, drove website redesign, established code standards, improved team efficiency.','exp.e4d':'2022.01 — 2023.02','exp.e4c':'Beijing HuanCheng · Shenyang','exp.e4r':'Frontend Engineer','exp.e4desc':'Built core WEB modules, solved cross-device compatibility, contributed to code standards.','exp.e5d':'2019.09 — 2021.11','exp.e5c':'Shenyang Chuangzao Tech','exp.e5r':'Frontend Engineer','exp.e5desc':'Participated in requirement reviews, built data interactions, bug fixes and optimization.','exp.amap':'AMap','proj.title':'Projects','proj.p1t':'Law Enforcement Platform','proj.p1d':'Core architecture design, e-signature + data visualization + map tracking. WebSocket real-time alerts, 30% efficiency boost.','proj.p2t':'MCN Data Platform','proj.p2d':'QR login, real-time push, connection keepalive. Router and state management best practices.','proj.p3t':'Spring Tourism Resort','proj.p3d':'Built from scratch: attraction guide, ticket booking. 25% faster loading.','proj.p4t':'gamfunAPP CMS','proj.p4d':'CRUD + rich text + QR login with native bridge. Danmaku, carousel, i18n.','skill.title':'Tech Stack','skill.g1':'Core Languages','skill.g2':'Framework','skill.g3':'Visualization & Maps','skill.g4':'DevOps & Cross-Platform','skill.map':'Map APIs','contact.title':'Contact','contact.location':'Dadong, Shenyang, China','footer.role':'Frontend Engineer','footer.tag':"let's build something awesome"}};
+let currentLang='zh';
+function switchLang(l){currentLang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n,t=i18n[l][k];if(t){if(el.children.length>0){const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null,false);let n;while(n=w.nextNode()){if(n.textContent.trim()){n.textContent=t;break}}}else el.textContent=t};if(el.dataset.text)el.dataset.text=t});document.documentElement.lang=l==='zh'?'zh-CN':'en'}
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open')}
+function closeNav(){document.getElementById('navLinks').classList.remove('open')}
+const c=document.getElementById('matrix-rain'),cx=c.getContext('2d');
+function rM(){c.width=window.innerWidth;c.height=window.innerHeight}rM();window.addEventListener('resize',rM);
+const ch='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF<>/{}[]',fs=14,cols=Math.floor(c.width/fs),dr=Array(cols).fill(1);
+function dM(){cx.fillStyle='rgba(10,10,15,0.05)';cx.fillRect(0,0,c.width,c.height);cx.font=fs+'px monospace';for(let i=0;i<dr.length;i++){const ch2=ch[Math.floor(Math.random()*ch.length)],x=i*fs,y=dr[i]*fs;cx.fillStyle=Math.random()>.98?'#00ff41':'#00ff4166';cx.shadowBlur=Math.random()>.98?15:0;cx.shadowColor='#00ff41';cx.fillText(ch2,x,y);cx.shadowBlur=0;if(y>c.height&&Math.random()>.975)dr[i]=0;dr[i]++}}
+setInterval(dM,50);
+const pC=document.getElementById('particles'),pCx=pC.getContext('2d');
+function rP(){pC.width=window.innerWidth;pC.height=window.innerHeight}rP();window.addEventListener('resize',rP);
+const pt=[],pN=60;for(let i=0;i<pN;i++)pt.push({x:Math.random()*pC.width,y:Math.random()*pC.height,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:Math.random()*2+1,alpha:Math.random()*.5+.1});
+function dP(){pCx.clearRect(0,0,pC.width,pC.height);for(let p of pt){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>pC.width)p.vx*=-1;if(p.y<0||p.y>pC.height)p.vy*=-1;pCx.beginPath();pCx.arc(p.x,p.y,p.r,0,Math.PI*2);pCx.fillStyle=`rgba(0,255,65,${p.alpha})`;pCx.fill()}for(let i=0;i<pt.length;i++){for(let j=i+1;j<pt.length;j++){const dx=pt[i].x-pt[j].x,dy=pt[i].y-pt[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){pCx.beginPath();pCx.moveTo(pt[i].x,pt[i].y);pCx.lineTo(pt[j].x,pt[j].y);pCx.strokeStyle=`rgba(0,255,65,${.08*(1-d/120)})`;pCx.lineWidth=.5;pCx.stroke()}}}requestAnimationFrame(dP)}
+dP();
+document.addEventListener('mousemove',e=>{document.getElementById('cursorGlow').style.left=e.clientX+'px';document.getElementById('cursorGlow').style.top=e.clientY+'px'});
+function aC(){document.querySelectorAll('.status-num').forEach(c=>{const t=parseInt(c.dataset.target),inc=t/40;let cur=0;!function u(){cur+=inc;if(cur<t){c.textContent=Math.ceil(cur);requestAnimationFrame(u)}else{c.textContent=t;if(t===100)c.textContent='100%'}}()})}
+function aS(){document.querySelectorAll('.skill-fill').forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.width+'%'},200)})}
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active')})},{threshold:.15});document.querySelectorAll('.reveal').forEach(e=>obs.observe(e));
+window.addEventListener('load',()=>{setTimeout(aC,500);setTimeout(aS,1000)});
+const sObs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){aS();sObs.unobserve(e.target)}})},{threshold:.3});sObs.observe(document.getElementById('skills'));
+document.querySelectorAll('nav a').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})})});
+const tObs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const l=e.target.querySelectorAll('.terminal-line');l.forEach((l,i)=>{l.style.animation='none';void l.offsetHeight;l.style.animation='typeIn .3s ease forwards';l.style.animationDelay=.2+i*.2+'s'});tObs.unobserve(e.target)}})},{threshold:.3});const tB=document.querySelector('.terminal');if(tB)tObs.observe(tB);
+console.log('%c> 王雨阳 · Frontend Engineer','color:#00ff41;font-size:20px;font-weight:bold;text-shadow:0 0 10px #00ff41;');console.log('%c$ contact: oldobj@163.com','color:#667;font-size:12px;');
+</script>
+</body>
+</html>
